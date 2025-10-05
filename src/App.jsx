@@ -1,14 +1,16 @@
 import { useState } from "react";
 import "./App.css";
-import PuzzleBoard from "./components/PuzzleBoard";
+import MemoryBoard from "./components/MemoryBoard";
 
 function App() {
-  const [countAttempts, setCountAttempts] = useState(0);
+  const [countTries, setCountTries] = useState(0);
+  const [endGame, setEndGame] = useState(false);
 
   return (
     <>
-      <h1>{countAttempts}</h1>
-      <PuzzleBoard></PuzzleBoard>
+      <h1>{countTries} tries</h1>
+      {!endGame && <h2>Win</h2>}
+      <MemoryBoard setCountTries={setCountTries} setEndGame={setEndGame} />
     </>
   );
 }
