@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
-import { cards } from "../lib/config";
+import { cards } from "../../lib/config";
 import "./memoryBoard.css";
 
-export default function PuzzleBoard({ setCountTries, setEndGame }) {
+export default function PuzzleBoard({
+  setTime,
+  setCountTries,
+  endGame,
+  setEndGame,
+}) {
+  const [startGame, setStartGame] = useState(false);
   const [selectedCards, setSelectedCards] = useState([]);
   const [correctCards, setCorrectCards] = useState([]);
   const [wrongCards, setWrongCards] = useState([]);
@@ -16,8 +22,8 @@ export default function PuzzleBoard({ setCountTries, setEndGame }) {
     shuffleArray(totalCards)
   );
 
-  // Fisher-Yates shuffle
   // Shuffle deck
+  // Fisher-Yates shuffle
   function shuffleArray(array) {
     for (let i = array.length - 1; i >= 1; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -26,8 +32,9 @@ export default function PuzzleBoard({ setCountTries, setEndGame }) {
     return array;
   }
 
-  // Select card
+  // Select card, Start Game
   const selectCard = (card) => {
+    if (!startGame) setStartGame(true);
     if (
       selectedCards.length < 2 &&
       !selectedCards.includes(card) &&
@@ -64,13 +71,6 @@ export default function PuzzleBoard({ setCountTries, setEndGame }) {
     [selectedCards]
   );
 
-  // End Game if condition is met
-  useEffect(() => {
-    if (totalCards.length === correctCards.length) {
-      setEndGame(true);
-    }
-  }, [correctCards]);
-
   // Set class for styling
   const setClass = (card) => {
     if (wrongCards.includes(card)) {
@@ -83,6 +83,36 @@ export default function PuzzleBoard({ setCountTries, setEndGame }) {
       return "card card-backside";
     }
   };
+
+  // Start Timer, stores cleanup
+  useEffect(() => {
+    if (!startGame || endGame) return;
+
+    const interval = setInterval(() => setTime((prev) => prev + 0.1), 100);
+    return () => clearInterval(interval);
+  }, [startGame, endGame]);
+
+  // End Game if condition is met
+  useEffect(() => {
+    if (totalCards.length === correctCards.length) {
+      setStartGame(false);
+      setEndGame(true);
+    }
+  }, [correctCards]);
+
+  // Restart Game
+  useEffect(() => {
+    if (!endGame) {
+      setStartGame(false);
+      setEndGame(false);
+      setSelectedCards([]);
+      setCorrectCards([]);
+      setWrongCards([]);
+      setCountTries(0);
+      setTime(0);
+      setShuffledCards(shuffleArray(totalCards));
+    }
+  }, [endGame]);
 
   return (
     <>
