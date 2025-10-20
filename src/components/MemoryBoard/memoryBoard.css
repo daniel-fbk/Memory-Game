@@ -1,0 +1,58 @@
+:root {
+    --card-size: 100px;
+    --transition: all 1s;
+    --background-color: #5d4b4a;
+    --transition-time: 0.2s
+}
+
+* {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+
+}
+
+.card {
+    width: var(--card-size);
+    height: var(--card-size);
+    transition: var(--transition);
+    background-color: var(--background-color);
+    transition: box-shadow var(--transition-time);
+    cursor: pointer;
+}
+
+.card-backside {
+    position: relative;
+    
+}
+
+.card-backside:before {
+    content: "";
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    background-color: var(--background-color);
+}
+
+.card-selected {
+    box-shadow: 0 0 2px 5px #f7c23c;
+}
+
+.card-wrong {
+    background-color: var(--background-color);
+    box-shadow: 0 0 2px 5px red;
+}
+
+.card-correct {
+    background-color: rgb(255, 255, 255); 
+    box-shadow: 0 0 2px 5px rgba(0, 255, 255, 0.7);
+}
+
+img {
+    width: 100%;
+}
